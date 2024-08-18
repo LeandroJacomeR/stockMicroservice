@@ -6,6 +6,6 @@ import java.util.List;
 
 public interface ICategoryPersistencePort {
     void saveCategory(Category categoria);
-    List<Category> getAllCategory();
+    List<Category> getAllCategory(int page, String order);
     Category getCategoryById(Long id);
 }

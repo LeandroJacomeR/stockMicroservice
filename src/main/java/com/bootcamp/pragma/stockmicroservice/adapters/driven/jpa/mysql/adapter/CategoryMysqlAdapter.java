@@ -8,9 +8,14 @@ import com.bootcamp.pragma.stockmicroservice.adapters.driven.jpa.mysql.repositor
 import com.bootcamp.pragma.stockmicroservice.domain.model.Category;
 import com.bootcamp.pragma.stockmicroservice.domain.spi.ICategoryPersistencePort;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+
+import static com.bootcamp.pragma.stockmicroservice.configuration.Constants.MAX_PAGE_SIZE;
 
 @RequiredArgsConstructor
 @Transactional
@@ -28,8 +33,10 @@ public class CategoryMysqlAdapter implements ICategoryPersistencePort {
     }
 
     @Override
-    public List<Category> getAllCategory() {
-        List<CategoryEntity> categoryEntityList = categoryRepository.findAll();
+    public List<Category> getAllCategory(int page, String order) {
+        Sort sort = Sort.by(Sort.Direction.fromString(order), "name");
+        Pageable pagination = PageRequest.of(page, MAX_PAGE_SIZE, sort);
+        List<CategoryEntity> categoryEntityList = categoryRepository.findAll(pagination).getContent();
         if (categoryEntityList.isEmpty()){
             throw new NoDataFoundException();
         }
@@ -38,16 +45,6 @@ public class CategoryMysqlAdapter implements ICategoryPersistencePort {
 
     @Override
     public Category getCategoryById(Long id) {
-        CategoryEntity categoryEntity = categoryRepository.findById(id).orElseThrow(NoDataFoundException::new);
-
-        // Log detallado para verificar el contenido de categoryEntity
-        //System.out.println("CategoryEntity - ID: " + categoryEntity.getId() + ", Name: " + categoryEntity.getName() + ", Description: " + categoryEntity.getDescription());
-
-        Category category = categoryEntityMapper.toCategory(categoryEntity);
-
-        // Log detallado para verificar el contenido de category
-        //System.out.println("Category - ID: " + category.getId() + ", Name: " + category.getName() + ", Description: " + category.getDescription());
-
-        return category;
+        return categoryEntityMapper.toCategory(categoryRepository.findById(id).orElseThrow(NoDataFoundException::new));
     }
 }

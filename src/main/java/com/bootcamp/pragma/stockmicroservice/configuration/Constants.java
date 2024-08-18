@@ -4,6 +4,7 @@ public final class Constants {
     private Constants() {
         throw new IllegalStateException("Utility class");
     }
+    public static final int MAX_PAGE_SIZE = 2;
     public static final String RESPONSE_MESSAGE_KEY = "message";
     public static final String RESPONSE_ERROR_MESSAGE_KEY = "error";
     public static final String CATEGORY_CREATED_MESSAGE = "Category created successfully";

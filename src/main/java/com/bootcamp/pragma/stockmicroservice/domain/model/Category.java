@@ -12,9 +12,6 @@ public class Category {
     private final String description;
 
     public Category(Long id, String name, String description) {
-        if (name.trim().isEmpty() || description.trim().isEmpty()) {
-            throw new EmptyFieldException(DomainConstants.FIELD_EMPTY_MESSAGE);
-        }
         if (name.length() > 50) {
             throw new ExceedFielException(DomainConstants.FIELD_NAME_LENGTH_MESSAGE);
         }

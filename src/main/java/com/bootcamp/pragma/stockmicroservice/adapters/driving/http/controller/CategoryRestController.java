@@ -32,7 +32,9 @@ public class CategoryRestController {
     }
 
     @GetMapping("")
-    public ResponseEntity<List<CategoryResponse>> getAllCategories() {
-        return ResponseEntity.ok(categoryHandler.getCategories());
+    public ResponseEntity<List<CategoryResponse>> getAllCategories(
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "order", defaultValue = "asc") String order) {
+        return ResponseEntity.ok(categoryHandler.getCategories(page, order));
     }
 }

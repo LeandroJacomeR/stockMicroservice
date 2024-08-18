@@ -25,8 +25,8 @@ public class CategoryHandler implements ICategoryHandler {
     }
 
     @Override
-    public List<CategoryResponse> getCategories() {
-        return categoryResponseMapper.toCategoryResponseList(categoryServicePort.getAllCategories());
+    public List<CategoryResponse> getCategories(int page, String order) {
+        return categoryResponseMapper.toCategoryResponseList(categoryServicePort.getAllCategories(page, order));
     }
 
     @Override

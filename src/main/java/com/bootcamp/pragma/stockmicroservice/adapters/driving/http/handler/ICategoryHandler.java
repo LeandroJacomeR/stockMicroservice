@@ -7,6 +7,6 @@ import java.util.List;
 
 public interface ICategoryHandler {
     void saveCategory(AddCategoryRequest category);
-    List<CategoryResponse> getCategories();
+    List<CategoryResponse> getCategories(int page, String order);
     CategoryResponse getCategory(Long id);
 }
