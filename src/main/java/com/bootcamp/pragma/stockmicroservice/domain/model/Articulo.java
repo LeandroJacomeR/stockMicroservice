@@ -6,5 +6,5 @@ public class Articulo {
     private double precio;
 
     private Category categoria;
-    private Marca marca;
+    private Brand brand;
 }
