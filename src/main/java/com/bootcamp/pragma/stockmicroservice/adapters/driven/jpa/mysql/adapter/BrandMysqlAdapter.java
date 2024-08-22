@@ -1,14 +1,21 @@
 package com.bootcamp.pragma.stockmicroservice.adapters.driven.jpa.mysql.adapter;
 
+import com.bootcamp.pragma.stockmicroservice.adapters.driven.jpa.mysql.entity.BrandEntity;
 import com.bootcamp.pragma.stockmicroservice.adapters.driven.jpa.mysql.exceptions.BrandAlreadyExistsException;
+import com.bootcamp.pragma.stockmicroservice.adapters.driven.jpa.mysql.exceptions.NoDataFoundException;
 import com.bootcamp.pragma.stockmicroservice.adapters.driven.jpa.mysql.mappers.IBrandEntityMapper;
 import com.bootcamp.pragma.stockmicroservice.adapters.driven.jpa.mysql.repositories.IBrandRepository;
 import com.bootcamp.pragma.stockmicroservice.domain.model.Brand;
 import com.bootcamp.pragma.stockmicroservice.domain.spi.IBrandPersistencePort;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+
+import static com.bootcamp.pragma.stockmicroservice.configuration.Constants.MAX_PAGE_SIZE;
 
 @RequiredArgsConstructor
 @Transactional
@@ -22,18 +29,22 @@ public class BrandMysqlAdapter implements IBrandPersistencePort {
         if (brandRepository.findByName(brand.getName()).isPresent()) {
             throw new BrandAlreadyExistsException();
         }
-        System.out.println("adapter" + brand.getName() + brand.getDescription());
-        System.out.println("adapter mapper" + brandEntityMapper.toEntity(brand).getName());
         brandRepository.save(brandEntityMapper.toEntity(brand));
     }
 
     @Override
     public List<Brand> getAllMarca(int page, String order) {
-        return List.of();
+        Sort sort = Sort.by(Sort.Direction.fromString(order), "name");
+        Pageable pagination = PageRequest.of(page, MAX_PAGE_SIZE, sort);
+        List<BrandEntity> brandEntityList = brandRepository.findAll(pagination).getContent();
+        if (brandEntityList.isEmpty()) {
+            throw new NoDataFoundException();
+        }
+        return brandEntityMapper.toEntityList(brandEntityList);
     }
 
     @Override
-    public Brand getMarcaById(int id) {
-        return null;
+    public Brand getMarcaById(Long id) {
+        return brandEntityMapper.toBrand(brandRepository.findById(id).orElseThrow(NoDataFoundException::new));
     }
 }

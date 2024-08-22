@@ -26,11 +26,11 @@ public class BrandHandler implements IBrandHandler {
 
     @Override
     public BrandResponse getBrand(Long id) {
-        return null;
+        return brandResponseMapper.toBrandResponse(brandServicePort.getBrandById(id));
     }
 
     @Override
     public List<BrandResponse> getAllBrands(int page, String order) {
-        return List.of();
+        return brandResponseMapper.toBrandResponseList(brandServicePort.getAllBrand(page, order));
     }
 }

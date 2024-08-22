@@ -16,7 +16,6 @@ public class BrandUseCase implements IBrandServicePort {
 
     @Override
     public void saveBrand(Brand brand) {
-        System.out.println("usecase" + brand.getName() + brand.getDescription());
         brandPersistencePort.saveMarca(brand);
     }
 
@@ -26,7 +25,7 @@ public class BrandUseCase implements IBrandServicePort {
     }
 
     @Override
-    public Brand getBrandById(int id) {
+    public Brand getBrandById(Long id) {
         return brandPersistencePort.getMarcaById(id);
     }
 }

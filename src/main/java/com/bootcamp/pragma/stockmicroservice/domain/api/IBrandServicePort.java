@@ -7,5 +7,5 @@ import java.util.List;
 public interface IBrandServicePort {
     void saveBrand(Brand brand);
     List<Brand> getAllBrand(int page, String order);
-    Brand getBrandById(int id);
+    Brand getBrandById(Long id);
 }

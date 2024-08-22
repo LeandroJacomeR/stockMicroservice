@@ -12,18 +12,16 @@ public class Category {
     private final String description;
 
     public Category(Long id, String name, String description) {
-        if (name.trim().isEmpty()) {
-            System.out.println("trim" + name.trim());
+        if (name != null && name.trim().isEmpty()) {
             throw new EmptyFieldException();
         }
-        System.out.println("trim:" + name.trim() + ".");
-        if (name.length() > 50) {
+        if (name != null && name.length() > 50) {
             throw new ExceedFielException();
         }
-        if (description.trim().isEmpty()) {
+        if (description != null && description.trim().isEmpty()) {
             throw new EmptyFieldException();
         }
-        if (description.length() > 90) {
+        if (description != null && description.length() > 90) {
             throw new ExceedFielException();
         }
         this.id = id;
