@@ -5,14 +5,11 @@ import com.bootcamp.pragma.stockmicroservice.adapters.driven.jpa.mysql.exception
 import com.bootcamp.pragma.stockmicroservice.adapters.driven.jpa.mysql.exceptions.NoDataFoundException;
 import com.bootcamp.pragma.stockmicroservice.domain.exception.EmptyFieldException;
 import com.bootcamp.pragma.stockmicroservice.domain.exception.ExceedFielException;
-import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.InitBinder;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -23,11 +20,6 @@ import static com.bootcamp.pragma.stockmicroservice.domain.util.DomainConstants.
 
 @ControllerAdvice
 public class ControllerAdvisor {
-
-    @InitBinder
-    public void initBinder(WebDataBinder binder) {
-        binder.registerCustomEditor(String.class, new StringTrimmerEditor(true));
-    }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, String>> handleValidationException(MethodArgumentNotValidException ex) {
@@ -40,13 +32,13 @@ public class ControllerAdvisor {
 
     @ExceptionHandler(CategoryAlreadyExistsException.class)
     public ResponseEntity<Map<String, String>> handleCategoryNameAlreadyExistsException(CategoryAlreadyExistsException categoryAlreadyExistsException) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+        return ResponseEntity.status(HttpStatus.CONFLICT)
                 .body(Collections.singletonMap(RESPONSE_ERROR_MESSAGE_KEY, CATEGORY_ALREADY_EXISTS_MESSAGE));
     }
 
     @ExceptionHandler(BrandAlreadyExistsException.class)
     public ResponseEntity<Map<String, String>> handleBrandNameAlreadyExistsException(BrandAlreadyExistsException brandAlreadyExistsException) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+        return ResponseEntity.status(HttpStatus.CONFLICT)
                 .body(Collections.singletonMap(RESPONSE_ERROR_MESSAGE_KEY, BRAND_ALREADY_EXISTS_MESSAGE));
     }
 
