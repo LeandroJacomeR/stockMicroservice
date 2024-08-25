@@ -1,10 +1,7 @@
 package com.bootcamp.pragma.stockmicroservice.domain.model;
 
 import com.bootcamp.pragma.stockmicroservice.domain.exception.EmptyFieldException;
-import com.bootcamp.pragma.stockmicroservice.domain.exception.ExceedFielException;
-import com.bootcamp.pragma.stockmicroservice.domain.util.DomainConstants;
-
-import static java.util.Objects.requireNonNull;
+import com.bootcamp.pragma.stockmicroservice.domain.exception.ExceedFieldException;
 
 public class Category {
     private final Long id;
@@ -16,17 +13,17 @@ public class Category {
             throw new EmptyFieldException();
         }
         if (name != null && name.length() > 50) {
-            throw new ExceedFielException();
+            throw new ExceedFieldException();
         }
         if (description != null && description.trim().isEmpty()) {
             throw new EmptyFieldException();
         }
         if (description != null && description.length() > 90) {
-            throw new ExceedFielException();
+            throw new ExceedFieldException();
         }
         this.id = id;
-        this.name = requireNonNull(name, DomainConstants.FIELD_NAME_NULL_MESSAGE);
-        this.description = requireNonNull(description, DomainConstants.FIELD_DESCRIPTION_NULL_MESSAGE);
+        this.name = name;
+        this.description = description;
     }
 
     public String getName() {

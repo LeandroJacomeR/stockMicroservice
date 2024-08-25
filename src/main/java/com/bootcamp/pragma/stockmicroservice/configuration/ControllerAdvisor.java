@@ -1,10 +1,7 @@
 package com.bootcamp.pragma.stockmicroservice.configuration;
 
-import com.bootcamp.pragma.stockmicroservice.adapters.driven.jpa.mysql.exceptions.BrandAlreadyExistsException;
-import com.bootcamp.pragma.stockmicroservice.adapters.driven.jpa.mysql.exceptions.CategoryAlreadyExistsException;
-import com.bootcamp.pragma.stockmicroservice.adapters.driven.jpa.mysql.exceptions.NoDataFoundException;
-import com.bootcamp.pragma.stockmicroservice.domain.exception.EmptyFieldException;
-import com.bootcamp.pragma.stockmicroservice.domain.exception.ExceedFielException;
+import com.bootcamp.pragma.stockmicroservice.adapters.driven.jpa.mysql.exceptions.*;
+import com.bootcamp.pragma.stockmicroservice.domain.exception.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -30,6 +27,12 @@ public class ControllerAdvisor {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
     }
 
+    @ExceptionHandler(NumberFormatException.class)
+    public ResponseEntity<Map<String, String>> handleNumberFormatException(NumberFormatException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(Collections.singletonMap(RESPONSE_ERROR_MESSAGE_KEY, INVALID_NUMBER_FORMAT_MESSAGE));
+    }
+
     @ExceptionHandler(CategoryAlreadyExistsException.class)
     public ResponseEntity<Map<String, String>> handleCategoryNameAlreadyExistsException(CategoryAlreadyExistsException categoryAlreadyExistsException) {
         return ResponseEntity.status(HttpStatus.CONFLICT)
@@ -48,15 +51,51 @@ public class ControllerAdvisor {
                 .body(Collections.singletonMap(RESPONSE_ERROR_MESSAGE_KEY, NO_DATA_FOUND_MESSAGE));
     }
 
+    @ExceptionHandler(CategoryNotFoundException.class)
+    public ResponseEntity<Map<String, String>> categoryNotFoundException(CategoryNotFoundException categoryNotFoundException) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(Collections.singletonMap(RESPONSE_ERROR_MESSAGE_KEY, CATEGORY_NOT_FOUND));
+    }
+
+    @ExceptionHandler(BrandNotFoundException.class)
+    public ResponseEntity<Map<String, String>> brandNotFoundException(BrandNotFoundException brandNotFoundException) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(Collections.singletonMap(RESPONSE_ERROR_MESSAGE_KEY, BRAND_NOT_FOUND));
+    }
+
+    @ExceptionHandler(ArticleNameAlreadyExistsException.class)
+    public ResponseEntity<Map<String, String>> articleNameAlreadyExistsException(ArticleNameAlreadyExistsException articleNameAlreadyExistsException) {
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(Collections.singletonMap(RESPONSE_ERROR_MESSAGE_KEY, ARTICLE_ALREADY_EXISTS_BRAND));
+    }
+
     @ExceptionHandler(EmptyFieldException.class)
     public ResponseEntity<Map<String, String>> emptyFieldException(EmptyFieldException emptyFieldException) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(Collections.singletonMap(RESPONSE_ERROR_MESSAGE_KEY, FIELD_EMPTY_MESSAGE));
     }
 
-    @ExceptionHandler(ExceedFielException.class)
-    public ResponseEntity<Map<String, String>> exceedFielException(ExceedFielException exceedFielException) {
+    @ExceptionHandler(ExceedFieldException.class)
+    public ResponseEntity<Map<String, String>> exceedFieldException(ExceedFieldException exceedFieldException) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(Collections.singletonMap(RESPONSE_ERROR_MESSAGE_KEY, FIELD_NAME_LENGTH_MESSAGE));
+    }
+
+    @ExceptionHandler(ExceedCategorySizeException.class)
+    public ResponseEntity<Map<String, String>> exceedCategorySizeException(ExceedCategorySizeException exceedCategorySizeException) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(Collections.singletonMap(RESPONSE_ERROR_MESSAGE_KEY, CATEGORY_SIZE_MESSAGE));
+    }
+
+    @ExceptionHandler(NoCategoryAssociatedException.class)
+    public ResponseEntity<Map<String, String>> noCategoryAssociatedException(NoCategoryAssociatedException noCategoryAssociatedException) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(Collections.singletonMap(RESPONSE_ERROR_MESSAGE_KEY, NO_CATEGORY_ASSOCIATED_MESSAGE));
+    }
+
+    @ExceptionHandler(NegativeNotAllowedException.class)
+    public ResponseEntity<Map<String, String>> negativeNotAllowedException(NegativeNotAllowedException negativeNotAllowedException) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(Collections.singletonMap(RESPONSE_ERROR_MESSAGE_KEY, FIELD_NEGATIVE_VALUE_MESSAGE));
     }
 }

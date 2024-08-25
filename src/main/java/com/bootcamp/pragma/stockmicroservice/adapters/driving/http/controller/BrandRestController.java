@@ -19,18 +19,20 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import static com.bootcamp.pragma.stockmicroservice.configuration.Constants.*;
+
 @RestController
 @RequestMapping("/brand")
 @RequiredArgsConstructor
 public class BrandRestController {
     private final IBrandHandler brandHandler;
 
-    @Operation(summary = "Add a new brand",
+    @Operation(summary = ADD_NEW_BRAND,
             responses = {
-                    @ApiResponse(responseCode = "201", description = "Brand created",
-                            content = @Content(mediaType = "application/json", schema = @Schema(ref = "#/components/schemas/Map"))),
-                    @ApiResponse(responseCode = "409", description = "Brand already exists",
-                            content = @Content(mediaType = "application/json", schema = @Schema(ref = "#/components/schemas/Error")))})
+                    @ApiResponse(responseCode = HTTP_CODE_CREATED, description = BRAND_CREATED,
+                            content = @Content(mediaType = MEDIA_TYPE_JSON, schema = @Schema(ref = SCHEMA_COMPONENTS_MAP))),
+                    @ApiResponse(responseCode = HTTP_CODE_CONFLICT, description = BRAND_ALREADY_EXISTS,
+                            content = @Content(mediaType = MEDIA_TYPE_JSON, schema = @Schema(ref = SCHEMA_COMPONENTS_ERROR)))})
     @PostMapping("")
     public ResponseEntity<Map<String, String>> saveBrand(@Valid @RequestBody AddBrandRequest addBrandRequest) {
         brandHandler.saveBrand(addBrandRequest);
@@ -38,26 +40,26 @@ public class BrandRestController {
                 .body(Collections.singletonMap(Constants.RESPONSE_MESSAGE_KEY, Constants.BRAND_CREATED_MESSAGE));
     }
 
-    @Operation(summary = "Get all the brands",
+    @Operation(summary = BRAND_GET_ALL,
             responses = {
-                    @ApiResponse(responseCode = "200", description = "All brands returned",
-                            content = @Content(mediaType = "application/json",
+                    @ApiResponse(responseCode = HTTP_CODE_OK, description = BRAND_ALL_RETURNED,
+                            content = @Content(mediaType = MEDIA_TYPE_JSON,
                                     array = @ArraySchema(schema = @Schema(implementation = BrandResponse.class)))),
-                    @ApiResponse(responseCode = "404", description = "No data found",
-                            content = @Content(mediaType = "application/json", schema = @Schema(ref = "#/components/schemas/Error")))})
+                    @ApiResponse(responseCode = HTTP_NOT_FOUND, description = NO_DATA_FOUND,
+                            content = @Content(mediaType = MEDIA_TYPE_JSON, schema = @Schema(ref = SCHEMA_COMPONENTS_ERROR)))})
     @GetMapping("")
     public ResponseEntity<List<BrandResponse>> getAllBrands(
-            @RequestParam(value = "page", defaultValue = "0") int page,
-            @RequestParam(value = "order", defaultValue = "asc") String order) {
+            @RequestParam(value = PARAM_VALUE_PAGE, defaultValue = PARAM_DEFAULT_VALUE_PAGE) int page,
+            @RequestParam(value = PARAM_VALUE_ORDER, defaultValue = PARAM_DEFAULT_VALUE_ORDER) String order) {
         return ResponseEntity.ok(brandHandler.getAllBrands(page, order));
     }
 
-    @Operation(summary = "Get a brand",
+    @Operation(summary = BRAND_GET,
             responses = {
-                    @ApiResponse(responseCode = "200", description = "Brand returned",
-                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = BrandResponse.class))),
-                    @ApiResponse(responseCode = "404", description = "Brand not found",
-                            content = @Content(mediaType = "application/json", schema = @Schema(ref = "#/components/schemas/Error")))})
+                    @ApiResponse(responseCode = HTTP_CODE_OK, description = BRAND_RETURNED,
+                            content = @Content(mediaType = MEDIA_TYPE_JSON, schema = @Schema(implementation = BrandResponse.class))),
+                    @ApiResponse(responseCode = HTTP_NOT_FOUND, description = BRAND_NOT_FOUND,
+                            content = @Content(mediaType = MEDIA_TYPE_JSON, schema = @Schema(ref = SCHEMA_COMPONENTS_ERROR)))})
     @GetMapping("/{id}")
     public ResponseEntity<BrandResponse> getBrand(@PathVariable Long id) {
         return ResponseEntity.ok(brandHandler.getBrand(id));

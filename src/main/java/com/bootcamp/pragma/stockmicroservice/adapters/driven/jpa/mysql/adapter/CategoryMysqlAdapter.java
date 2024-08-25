@@ -26,6 +26,7 @@ public class CategoryMysqlAdapter implements ICategoryPersistencePort {
 
     @Override
     public void saveCategory(Category category) {
+        System.out.println(category.getDescription());
         if (categoryRepository.findByName(category.getName()).isPresent()){
             throw new CategoryAlreadyExistsException();
         }
